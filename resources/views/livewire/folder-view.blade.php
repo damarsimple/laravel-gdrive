@@ -34,15 +34,15 @@
             @case('card')
                 <h3 class="font-bold m-5">Folders</h3>
                 <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mr-3">
-                    @for($i = 0; $i < 12; $i++)
-                        @include('card/folder-card')
-                    @endfor
+                    @foreach($folders as $folder)
+                        @include('card/folder-card', ['folder' => $folder])
+                    @endforeach
                 </div>
                 <h3 class="font-bold m-5">Files</h3>
                 <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mr-3">
-                    @for($i = 0; $i < 12; $i++)
-                        @include('card/file-card')
-                    @endfor
+                    @foreach($files as $file)
+                        @include('card/file-card', ['file' => $file])
+                    @endforeach
                 </div>
                 @break
             @default

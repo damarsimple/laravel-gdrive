@@ -58,4 +58,24 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function folders()
+    {
+        return $this->hasMany('App\Models\Folder');
+    }
+
+    public function files()
+    {
+        return $this->hasMany('App\Models\File');
+    } 
+    
+    public function getStoragePercentageUsageAttribute()
+    {
+        return $this->total_usage / $this->storage_limit * 100;
+    }
+
+    public function getTotalUsageAttribute()
+    {
+        return $this->files()->sum('size');
+    }
 }
