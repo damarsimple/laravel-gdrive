@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-span-5 bg-white">
 
-                <livewire:folder-view >
+                <livewire:bin-view >
 
                 </div>
             </div>
