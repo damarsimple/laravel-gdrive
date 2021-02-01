@@ -2,6 +2,6 @@
 
     <i class="fa fa-folder text-lg mr-2 my-1" aria-hidden="true"></i>
 
-    <span>Placholder {{ $i }}</span>
+    <span>{{ $folder->name }}</span>
 
 </div>

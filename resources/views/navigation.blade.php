@@ -33,7 +33,7 @@
     <hr>
     <li class="py-2 hover:bg-gray-100 cursor-pointer rounded-r-lg px-3">
         Storage ({{ Auth::user()->storage_percentage_usage }}%)
-        <br> {{ Auth::user()->total_usage }} GB of {{ Auth::user()->storage_limit }} GB used lul
+        <br> {{ round(Auth::user()->total_usage / 1073741824,1) }} GB of {{ round(Auth::user()->storage_limit  / 1073741824,1)}} GB used lul
         <div class="shadow w-full bg-grey-light mt-2">
             <div class="bg-red-900 text-xs leading-none py-1 text-center text-white" 
             style="width: {{ Auth::user()->storage_percentage_usage }}%">{{ Auth::user()->storage_percentage_usage }}%</div>

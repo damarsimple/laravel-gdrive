@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->text('profile_photo_path')->nullable();
-            $table->bigInteger('storage_limit')->default(15);
+            $table->bigInteger('storage_limit')->default(1073741824 * 15); // 15GB
             $table->timestamps();
         });
     }
