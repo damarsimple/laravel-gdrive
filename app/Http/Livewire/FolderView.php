@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\File;
+use App\Models\Folder;
 use Illuminate\Support\Str;
 
 class FolderView extends Component
@@ -26,6 +27,8 @@ class FolderView extends Component
     public $obj = [];
 
     public $ufile;
+
+    public $newFolderName = "";
 
     public function mount()
     {
@@ -48,6 +51,21 @@ class FolderView extends Component
         }
     }
 
+    public function createFolder()
+    {
+        $folder = new Folder();
+
+        if(!$this->folder == null)
+        {
+            $folder->folder_id = $this->folder->id;
+        }
+
+        $folder->name = $this->newFolderName;
+        $folder->user_id = Auth::user()->id;
+        $folder->save();
+
+        $this->mount();
+    }
     public function save()
     {
 
@@ -62,26 +80,8 @@ class FolderView extends Component
         $file->mime = mime_content_type($file->file_path);
 
         $file->save();
-        if ($this->folder != null) {
-            $folder = User::find(Auth::user()->id)->folders()->where('id', $this->pathId)->first();
 
-            $this->folders = $folder->subfolders ?? [];
-
-            $this->files =  $folder->files;
-            
-            $this->folder = $folder;
-        } else {
-            $folder =  User::find(Auth::user()->id);
-
-            $this->folders = $folder->folders()->whereNull('folder_id')->get();
-
-            $this->files =  $folder->files()->whereNull('folder_id')->get();
-
-            $this->folder = null;
-        }
-
-        dd(ini_get('upload_max_filesize'));
-
+        $this->mount();
     }
 
     public function changePath(int $pathId)
@@ -96,9 +96,9 @@ class FolderView extends Component
 
         $this->folder = $folder;
        
-        for ($first  =  $this->folder->parentfolder ?? null; $first != null; $first = $first->parentfolder ?? null) {
-            $this->obj[] = $first;
-        }
+        if($this->folder != null && $this->folder->parentfolder != null)
+            $this->obj[] = $this->folder->parentfolder;
+
     }
     public function render()
     {

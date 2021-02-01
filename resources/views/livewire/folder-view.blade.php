@@ -14,31 +14,49 @@
                     <h3 class="text-lg font-medium leading-6 text-gray-900">
                         Upload File to {{ $folder->name ?? "Root"}}
                     </h3>
-
-                    <div class="mt-2">
-
-
-
-
-                        <form wire:submit.prevent="save">
+                    <div class="mt-2" x-data="{ isUploading: false, progress: 0 }" x-on:livewire-upload-start="isUploading = true" x-on:livewire-upload-finish="isUploading = false" x-on:livewire-upload-error="isUploading = false" x-on:livewire-upload-progress="progress = $event.detail.progress">
+                        <form autocomplete="off" wire:submit.prevent="save">
                             <input type="file" wire:model="ufile"> @error('photo') <span class="error">{{ $message }}</span> @enderror
-
-                            <button type="submit">Save Photo</button>
+                            <div x-show="isUploading">
+                                <progress max="100" x-bind:value="progress"></progress>
+                                <small x-text="progress"></small>%
+                            </div>
+                            <button class="inline-flex justify-center w-full px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700" type="submit">Save to uploaded file to drive</button>
                         </form>
-
-
-
-
                     </div>
                 </div>
-
                 <!-- One big close button.  --->
                 <div class="mt-5 sm:mt-6">
                     <span class="flex w-full rounded-md shadow-sm">
             <button @click="open = false" class="inline-flex justify-center w-full px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700">
-              Close this modal!
+              Close Upload Window
             </button>
           </span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- modal div -->
+    <div class="mt-6" x-data="{ open: false }">
+
+        <!-- Button (blue), duh! -->
+        <button class="px-4 py-2 text-white bg-blue-500 rounded select-none no-outline focus:shadow-outline" @click="open = true">Create New Folder</button>
+        <!-- Dialog (full screen) -->
+        <div class="absolute top-0 left-0 flex items-center justify-center w-full h-full" style="background-color: rgba(0,0,0,.5);" x-show="open">
+            <!-- A basic modal dialog with title, body and one button to close -->
+            <div class="h-auto p-4 mx-2 text-left bg-white rounded shadow-xl md:max-w-xl md:p-6 lg:p-8 md:mx-0" @click.away="open = false">
+                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <h3 class="text-lg font-medium leading-6 text-gray-900">
+                        Create a new folder
+                    </h3>
+                    <div class="mt-2">
+                        <form wire:submit.prevent="createFolder">
+                            <input type="text" wire:model="newFolderName"> @error('newFolderName') <span class="error">{{ $message }}</span> @enderror
+                            <button @click="open = false" class="inline-flex justify-center w-full px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700" type="submit">Create Folder</button>
+                        </form>
+                    </div>
                 </div>
 
             </div>
@@ -78,12 +96,12 @@
         <h3 class="font-bold m-5">My Drive > @foreach($obj as $f) {{ $f['name'] }} > @endforeach @if(!empty($folder->name)) {{ $folder->name ?? ""}} @endif
 
         </h3>
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mr-3">
+        <div class="grid grid-cols-2 lg:grid-cols-6 gap-3 mr-3">
             @foreach($folders as $folder)
             <button wire:click="changePath({{ $folder->id }})">  @include('card/folder-card', ['folder' => $folder])</button> @endforeach
         </div>
         <h3 class="font-bold m-5">Files</h3>
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mr-3">
+        <div class="grid grid-cols-2 lg:grid-cols-6 gap-3 mr-3">
             @foreach($files as $file) @include('card/file-card', ['file' => $file]) @endforeach
         </div>
         @break @default

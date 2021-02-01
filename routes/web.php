@@ -91,8 +91,5 @@ Route::get('/test2', function () {
 
 Route::get('/file/{id}', function ($id) {
     $file = File::find($id);
-    return response($file->file_content)
-            ->withHeaders([
-                'Content-Type' => $file->mime,
-            ]);
+    return response()->download($file->file_path);
 });
