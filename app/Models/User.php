@@ -71,11 +71,16 @@ class User extends Authenticatable
     
     public function getStoragePercentageUsageAttribute()
     {
-        return $this->total_usage / $this->storage_limit * 100;
+        return round($this->total_usage / $this->storage_limit * 100, 2);
     }
 
     public function getTotalUsageAttribute()
     {
         return $this->files()->sum('size');
+    }
+
+    public function getUserDriveAttribute()
+    {
+        return storage_path('app') . "/" . $this->name;
     }
 }
